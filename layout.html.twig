@@ -17,8 +17,8 @@
 <p>
 <select id="cars_make" name="make">
 <option value="">Select Make</option>
-{{ for make in makes }}
-<option value="Ford">Ford</option>
+{{ for make_id, make_value in makes }}
+<option value="{{ make_id }}">{{ make_value }}</option>
 
 {{ endfor }}
 </select>
