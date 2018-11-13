@@ -15,7 +15,13 @@
 <fieldset>
     <legend>Cars</legend>
 <p>
-<select id="cars_make" name="make"><option value="">Select Make</option><option value="Ford">Ford</option><option value="Acura">Acura</option></select>
+<select id="cars_make" name="make">
+<option value="">Select Make</option>
+{{ for make in makes }}
+<option value="Ford">Ford</option>
+
+{{ endfor }}
+</select>
 </p>
 
 <p>
