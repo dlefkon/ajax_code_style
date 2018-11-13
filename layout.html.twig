@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cars</title>
+    <link rel="stylesheet" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"></link>
+    <style>
+        #cars_model {
+                display:none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<fieldset>
+    <legend>Cars</legend>
+<p>
+<select id="cars_make" name="make"><option value="">Select Make</option><option value="Ford">Ford</option><option value="Acura">Acura</option></select>
+</p>
+
+<p>
+<select id="cars_model" name="model"><option value="Edge">Edge</option><option value="Escape">Escape</option><option value="ILX">ILX</option><option value="MDX">MDX</option></select>
+</p>
+<div id="car_pic"></div>
+</fieldset>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+
+	/** 
+	 * Refresh model select options
+         */
+	function refresh_car_models(data) {
+		jQuery('#car_pic').html('');
+		jQuery('#cars_model').empty().append('<option value="">Select Model</option>');
+		for (i in data) {
+                	jQuery('#cars_model').append('<option value=' + data[i].model + '>' + data[i].model + '</option>');
+	    	}
+	}
+
+	/**
+	 * Show the model dropdown select options on a make dropdown select change event
+	 */
+	function display_models() {
+            jQuery('#cars_make').bind('change', function() {
+                // Read car data json from server, passing make request param.
+                jQuery.ajax({
+                        method: 'GET',
+                        url: 'cars.php', 
+                        data: 'make=' + jQuery(this).val(), 
+                        dataType: 'json',
+                        success: function(data) {
+                            refresh_car_models(data);
+                        }
+                });
+
+                if (jQuery(this).val().length > 0) {
+                    jQuery('#cars_model').fadeIn();
+                }
+                else {
+                    jQuery('#cars_model').fadeOut();
+                } 
+
+            }); 
+	}
+
+       /** 
+	* Write the Image element to the HTML on model change event
+        */
+       function display_pic() {
+       	  jQuery('#cars_model').bind('change', function() {
+		jQuery.ajax({
+                        method: 'GET',
+                        url: 'cars.php', 
+                        data: 'make=' + jQuery('#cars_make').val(), 
+                        dataType: 'json',
+                        success: function(data) {
+				jQuery('#car_pic').html('');
+                        	for(i in data) {
+				  if (jQuery('#cars_model').val() == data[i].model) {
+                        		jQuery('#car_pic').html('<img src="' + data[i].url + '"></img>');
+                		  } 
+				}
+                        }
+                });
+	  });
+       }
+       
+       /**
+	* Document ready event handler
+	*/
+       jQuery(document).ready(function() {
+       	    	display_models();
+		display_pic();
+       });
+</script>
+</body>
+</html>
+
